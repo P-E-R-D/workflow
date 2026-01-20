@@ -156,3 +156,31 @@ __all__ = ['add', 'subtract', 'my_custom_workflow']  # Update this list
 │       └── requirements.txt             
 └── README.md                      
 ```
+
+## Running the Flask server
+
+Local development (dev server):
+
+```bash
+python main.py
+```
+
+Production (gunicorn):
+
+```bash
+gunicorn --bind 0.0.0.0:5000 main:app
+```
+
+Docker build and run:
+
+```bash
+docker build -t workflow-server .
+docker run -p 5000:5000 workflow-server
+```
+
+Example request:
+
+```bash
+curl -X POST -H "Content-Type: application/json" \
+    -d '{"a":2.5,"b":3.7}' http://localhost:5000/add
+```
