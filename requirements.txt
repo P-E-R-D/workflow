@@ -1,1 +1,5 @@
 torch
+flask
+gunicorn
+numpy
+per_datasets

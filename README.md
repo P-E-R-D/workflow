@@ -58,4 +58,28 @@ with per_datasets.initialize(workflows=['DCA_PINN_Workflow_ID/from/perd-website'
 
     # Or use pds.visual if imported as pds
     pds.visual.line_plot(results, y='loss_history', title="PINN Training Loss")
+
+## Server
+
+This repository also provides a small Flask server exposing a `/train` route that accepts a JSON payload and runs the `train` workflow.
+
+Build and run with Docker (example):
+
+```bash
+docker build -t dca_pinn:latest .
+docker run -p 5000:5000 dca_pinn:latest
+```
+
+Example `curl` payload (replace arrays with appropriate shapes):
+
+```bash
+curl -X POST http://localhost:5000/train \
+    -H "Content-Type: application/json" \
+    -d '{"X": [[[0.0]]], "Y": [[[1.0]]], "epochs": 10}'
+```
+
+Notes:
+- The server expects `X` shaped `[seq_len, batch_size, input_dim]` and `Y` shaped `[seq_len, batch_size, 1]`.
+- `X` will be converted to a `torch.Tensor` with `requires_grad=True` to allow derivative computation inside the PINN.
+- Training runs synchronously in this simple server; for production or long runs, run asynchronously (e.g., background worker).
 ```
