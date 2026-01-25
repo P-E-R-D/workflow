@@ -14,9 +14,9 @@ WORKDIR /app
 # This is a common set; you might need to adjust based on specific library needs if errors occur during pip install.
 # For TensorFlow, full build dependencies can be extensive. Using a pre-built TensorFlow wheel usually helps.
 # If CPU-only TensorFlow is sufficient (as often is for inference or lighter tasks in smaller containers):
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     build-essential \
+#     && rm -rf /var/lib/apt/lists/*
 # Commenting out apt-get for now to keep the image smaller, assuming wheels will work.
 
 # Install missing os dependencies
