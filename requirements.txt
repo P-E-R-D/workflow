@@ -1,5 +1,5 @@
-torch
-flask
-gunicorn
-numpy
-per_datasets
+Flask==3.1.2
+numpy==2.4.1
+torch==2.10.0
+gunicorn==24.1.1
+per_datasets==0.0.3a0

@@ -88,5 +88,13 @@ def train_route():
         return jsonify({"status": "error", "message": str(e), "traceback": tb}), 400
 
 
+@app.route('/', methods=['GET'])
+def test():
+    return jsonify({
+        "status": "OK",
+        "message": "You've reached the DCA_PINN training server."
+    })
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
