@@ -1,10 +1,9 @@
 """
-Workflow module exposing the `add` workflow function.
-
-This package provides a simple `add(a, b)` function used by the
-Flask server entrypoint (`main.py`).
+PINN Workflow Module
 """
 
-from .workflow import add
+from .workflow import train
 
-__all__ = ['add']
+__all__ = ['train']
+
+# Server entrypoint: `main.py` provides a Flask interface to `train`.
