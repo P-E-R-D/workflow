@@ -157,30 +157,32 @@ __all__ = ['add', 'subtract', 'my_custom_workflow']  # Update this list
 └── README.md                      
 ```
 
-## Running the Flask server
+## Running the gRPC workflow server
 
-Local development (dev server):
+Local development:
 
 ```bash
 python main.py
 ```
 
-Production (gunicorn):
-
-```bash
-gunicorn --bind 0.0.0.0:5000 main:app
-```
+Server port:
+- Default gRPC port is `50051`.
+- Override with `PORT` or `GRPC_PORT`.
 
 Docker build and run:
 
 ```bash
 docker build -t workflow-server .
-docker run -p 5000:5000 workflow-server
+docker run -p 50051:50051 workflow-server
 ```
 
-Example request:
+Protocol package:
+- The canonical gRPC contract is in `perd_workflow_api/v1/workflow.proto`.
+- Python bindings live in:
+  - `perd_workflow_api/v1/workflow_pb2.py`
+  - `perd_workflow_api/v1/workflow_pb2_grpc.py`
+- Regenerate bindings after editing `.proto` with:
 
 ```bash
-curl -X POST -H "Content-Type: application/json" \
-    -d '{"a":2.5,"b":3.7}' http://localhost:5000/add
+./scripts/generate_proto.sh
 ```

@@ -22,8 +22,8 @@ ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="${VIRTUAL_ENV}/bin:$PATH"
 
 
-# Set the port the application will listen on. Cloud Run and App Hosting will inject this.
-ENV PORT 5000
+# Workflow services expose gRPC on 50051.
+ENV PORT 50051
 
 WORKDIR /app
 
@@ -81,5 +81,5 @@ COPY . .
 # Expose the port the app runs on
 EXPOSE ${PORT}
 
-# Define the command to run the application using Gunicorn
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 600 main:app
+# Define the command to run the workflow gRPC server
+CMD exec python main.py
