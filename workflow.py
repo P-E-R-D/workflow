@@ -13,11 +13,11 @@ are built and exposed in generated workspace code.
 from per_datasets import workflow
 
 @workflow.unary
-def subtract(a: float, b: float) -> float:
-    """Subtract two numbers.
+def add(a: float, b: float) -> float:
+    """Add two numbers.
 
     Example:
-        >>> subtract(2.5, 3.7)
-        -1.2
+        >>> add(2.5, 3.7)
+        6.2
     """
-    return a - b
+    return a + b
