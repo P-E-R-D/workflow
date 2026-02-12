@@ -1,4 +1,4 @@
-python-dotenv==1.2.1
-grpcio>=1.74.0
-grpcio-health-checking>=1.74.0
-protobuf>=5.27.0
+# Add workflow-specific dependencies here.
+# Example:
+# numpy>=1.26.0
+per-datasets>=0.0.3b0
