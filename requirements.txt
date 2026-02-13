@@ -1,4 +1,4 @@
 # Add workflow-specific dependencies here.
 # Example:
 # numpy>=1.26.0
-per-datasets>=0.0.3b1
+per-datasets>=0.0.4a2
