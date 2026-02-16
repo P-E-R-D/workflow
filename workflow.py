@@ -5,6 +5,7 @@ PINN Workflow
 import torch
 import torch.nn as nn
 import math
+from per_datasets import workflow
 
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model: int, max_len: int = 5000):
@@ -301,6 +302,7 @@ class PINNTransformer(nn.Module):
         # 3f. Return both predicted_y and adaptive_weights
         return predicted_y, adaptive_weights
 
+@workflow.bi_di
 def train(
     X,
     Y,
