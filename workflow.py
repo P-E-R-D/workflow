@@ -60,19 +60,23 @@ def count_up(seed: float, step: float, count: int) -> WorkflowStreamOutput[float
 async def compute_nn_layer(inputStream: WorkflowStreamInput[float, int, bool]) -> WorkflowStreamOutput[float]:
     """Consume a bidirectional stream and yield transformed cumulative totals.
 
+    Note:
+        Stream chunk values are validated against the function signature:
+        `value: float`, `scale: int`, `bias: bool`.
+
     Runtime usage:
         >>> list(pds_session.workflows("<deployment_id>").compute_nn_layer([
-        ...     {"value": 3.0, "scale": 2.0, "bias": 1.0},
-        ...     {"value": 5.0, "scale": 0.5, "bias": -0.5},
+        ...     {"value": 3.0, "scale": 2, "bias": True},
+        ...     {"value": 5.0, "scale": 5, "bias": False},
         ... ]))
-        [7.0, 9.0]
+        [7.0, 32.0]
         >>> list(pds_session.workflows("<deployment_id>").compute_nn_layer([
-        ...     [3.0, 2.0, 1.0],
-        ...     [5.0, 0.5, -0.5],
+        ...     [3.0, 2, True],
+        ...     [5.0, 5, False],
         ... ]))
-        [7.0, 9.0]
-        >>> list(pds_session.workflows("<deployment_id>").compute_nn_layer(<generator of [3.0, 2.0, 1.0] or {"value": 5.0, "scale": 0.5, "bias": -0.5}>))
-        [7.0, 9.0]
+        [7.0, 32.0]
+        >>> list(pds_session.workflows("<deployment_id>").compute_nn_layer(<generator of [3.0, 2, True] or {"value": 5.0, "scale": 5, "bias": False}>))
+        [7.0, 32.0]
     """
     total = 0.0
     async for value, scale, bias in inputStream:  # generated runtime passes an async input iterator
