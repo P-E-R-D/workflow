@@ -338,16 +338,16 @@ async def train(
     """
 
     batch_size = int(batch_size)
-    epochs = int(epochs[0])
-    output_dim = int(output_dim[0])
-    num_pde_constraints = int(num_pde_constraints[0])
-    d_model = int(d_model[0])
-    num_heads = int(num_heads[0])
-    dim_feedforward = int(dim_feedforward[0])
-    num_layers = int(num_layers[0])
-    dropout = float(dropout[0])
-    learning_rate = float(learning_rate[0])
-    lambda_data = float(lambda_data[0])
+    epochs = int(epochs)
+    output_dim = int(output_dim)
+    num_pde_constraints = int(num_pde_constraints)
+    d_model = int(d_model)
+    num_heads = int(num_heads)
+    dim_feedforward = int(dim_feedforward)
+    num_layers = int(num_layers)
+    dropout = float(dropout)
+    learning_rate = float(learning_rate)
+    lambda_data = float(lambda_data)
     lambda_pde = float(lambda_pde)
 
     data = [(float(x), float(q), float(Di), float(b), float(Dinf), float(n), float(T)) for x, q, Di, b, Dinf, n, T in inputStream]
@@ -373,7 +373,7 @@ async def train(
         dropout=dropout
     )
 
-    pde_constraints_module = PDEConstraints(num_pde_constraints=int(num_pde_constraints))
+    pde_constraints_module = PDEConstraints(num_pde_constraints=num_pde_constraints)
     pinn_loss_fn = PINNLoss(lambda_data=lambda_data, lambda_pde=lambda_pde)
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
