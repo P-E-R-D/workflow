@@ -1,29 +1,51 @@
-# Workflow Template
+# PERD workflow starter
 
-This repository is intentionally minimal. It is a source template that
-the deployment pipeline transforms at build time into a runnable gRPC
-workflow service.
+A working [PERD](https://perd.app) workflow to start yours from: four operations,
+a page to use them in the browser, and the tests PERD's build would run.
 
-## Files in this template
+**Guide:** [Publish your first workflow](https://perd.app/docs/getting-started/first-workflow/)
 
-- `workflow.py`: Your workflow functions exposed with @workflow.** decorators
-- `requirements.txt`: Python dependencies for your workflow code
-- `README.md`: Usage notes
-- `LICENSE`
+## Use it
 
-## Decorators used for gRPC exposure
+1. Select **Use this template › Create a new repository**, and keep the new
+   repository **public**: PERD builds from public repositories.
+2. Clone it, then run the tests:
 
-Mark functions you wish to expose in your `workflow.py` with one of:
+   ```bash
+   python -m venv .venv && source .venv/bin/activate
+   pip install "perd-worker[page]" pytest
+   pytest
+   ```
 
-- `@workflow.unary`         = One request and one response
-- `@workflow.input_stream`  = Many request chunks and one response
-- `@workflow.output_stream` = One request and many response chunks
-- `@workflow.bi_di`         = Bi-directional streaming of request/response chunks
+3. In the PERD console, open your project, then **Workflows › Publish new**,
+   and paste your repository's address.
 
-Typed stream wrappers are imported from:
+## Files
 
-- `from per_datasets.workflow import WorkflowStreamInput, WorkflowStreamOutput`
+| File | Purpose |
+| --- | --- |
+| `workflow.py` | The operations PERD exposes, one per decorated function. |
+| `page.py` | The browser page, written with perdlit. |
+| `perd.toml` | The compute class and the Store listing. |
+| `requirements.txt` | Your own Python dependencies. |
+| `setup.sh` | Optional system packages, installed at build time. |
+| `favicon.ico` | The icon on the desktop and in the Store. |
+| `CHANGELOG.md` | Shown on the workflow's Changelog tab. |
+| `tests/` | Calls the operations and checks the page. |
 
-During deployment, the server discovers these decorators, generates a
-`protobuf` file, builds gRPC wrappers, and packages this server into
-container files, then builds/deploys the application to the PERD platform.
+## The four call modes
+
+| Decorator | Shape | In the starter |
+| --- | --- | --- |
+| `@workflow.unary` | One request, one answer | `add` |
+| `@workflow.input_stream` | A stream in, one answer | `total` |
+| `@workflow.output_stream` | One request, a stream out | `count_up` |
+| `@workflow.bi_di` | Streams both ways | `running_mean` |
+
+Arguments and results are scalars: `float`, `int`, `str`, `bool` or `bytes`.
+Streams carry tuples of them.
+
+## Licence
+
+MIT. Replace this README with your workflow's own: PERD shows it on the
+workflow's Store page.

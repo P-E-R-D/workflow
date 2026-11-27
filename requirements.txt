@@ -1,4 +1,8 @@
-# Add workflow-specific dependencies here.
-# Example:
-# numpy>=1.26.0
-per-datasets>=0.0.6
+# Your workflow's own Python dependencies, one per line.
+# The build installs perd-worker itself: do not list it here.
+# numpy>=1.26
+#
+# PyTorch on a CPU compute class: the CPU-only wheels keep the image near
+# 1 GB instead of 7 GB.
+# --extra-index-url https://download.pytorch.org/whl/cpu
+# torch
