@@ -1,4 +1,3 @@
-# Add workflow-specific dependencies here.
-# Example:
-# numpy>=1.26.0
-per-datasets>=0.0.6
+# Your workflow's own Python dependencies, one per line.
+# The build installs perd-worker itself: do not list it here.
+# numpy>=1.26

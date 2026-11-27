@@ -1,0 +1,12 @@
+# How PERD builds and lists this workflow.
+# Guide: https://perd.app/docs/workflows/publishing/#compute-class-perdtoml
+
+[compute]
+# The machine your workflow runs on: small, medium, large or gpu_t4.
+class = "small"
+
+[workflow]
+summary = "A starter workflow: four operations and a page. Replace them with your own."
+tags = ["starter"]
+category = "Utilities"
+license = "MIT"

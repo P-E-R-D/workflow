@@ -1,85 +1,46 @@
-"""Template workflow module.
+"""Your workflow: the operations PERD builds, lists in the Store and serves.
 
-Only functions decorated with:
+Mark a function with one of the four decorators to expose it. Arguments and
+results are scalars (float, int, str, bool, bytes); streams carry tuples of
+scalars. Rename, replace and add operations freely: PERD reads them when it
+builds your repository.
 
-`@workflow.unary`,
-`@workflow.input_stream`,
-`@workflow.output_stream`, or
-`@workflow.bi_di`
-
-are built and exposed in generated workspace code.
+Guide: https://perd.app/docs/getting-started/first-workflow/
 """
-from per_datasets import workflow
-from per_datasets.workflow import WorkflowStreamInput, WorkflowStreamOutput
+
+from __future__ import annotations
+
+from perd_worker import WorkflowStreamInput, WorkflowStreamOutput, workflow
 
 
 @workflow.unary
 def add(a: float, b: float) -> float:
-    """Add two numbers.
-
-    Example:
-        >>> add(2.5, 3.7)
-        6.2
-    """
+    """Add two numbers: one call, one answer."""
     return a + b
 
 
 @workflow.input_stream
-async def sum_stream(inputStream: WorkflowStreamInput[float], max_iters: int) -> float:
-    """Consume an input stream and return one aggregate result.
-
-    Runtime usage:
-        >>> pds_session.workflows("<deployment_id>").sum_stream([[1.0], [2.0], [3.0]], max_iters=3)
-        6.0
-    """
-    total = 0.0
-    index = 0
-    async for value in inputStream:
-        total += float(value)
-        index += 1
-        if index >= int(max_iters):
-            break
-    return total
+async def total(values: WorkflowStreamInput[float], scale: float = 1.0) -> float:
+    """Sum a stream of numbers sent one by one, then answer once, times ``scale``."""
+    result = 0.0
+    async for value in values:
+        result += float(value)
+    return result * scale
 
 
 @workflow.output_stream
-def count_up(seed: float, step: float, count: int) -> WorkflowStreamOutput[float]:
-    """Return a server-side stream from multi-parameter inputs.
-
-    Runtime usage:
-        >>> list(pds_session.workflows("<deployment_id>").count_up(seed=2.0, step=1.5, count=4))
-        [2.0, 3.5, 5.0, 6.5]
-    """
-    start = float(seed)
-    delta = float(step)
-    size = max(0, int(count))
-    return [start + (idx * delta) for idx in range(size)]
+async def count_up(start: float, step: float, count: int) -> WorkflowStreamOutput[int, float]:
+    """Answer with a stream of (index, value) pairs: ``start``, ``start + step``, and so on."""
+    for index in range(int(count)):
+        yield index, start + index * step
 
 
 @workflow.bi_di
-async def compute_nn_layer(inputStream: WorkflowStreamInput[float, int, bool]) -> WorkflowStreamOutput[float]:
-    """Consume a bidirectional stream and yield transformed cumulative totals.
-
-    Note:
-        Stream chunk values are validated against the function signature:
-        `value: float`, `scale: int`, `bias: bool`.
-
-    Runtime usage:
-        >>> list(pds_session.workflows("<deployment_id>").compute_nn_layer([
-        ...     {"value": 3.0, "scale": 2, "bias": True},
-        ...     {"value": 5.0, "scale": 5, "bias": False},
-        ... ]))
-        [7.0, 32.0]
-        >>> list(pds_session.workflows("<deployment_id>").compute_nn_layer([
-        ...     [3.0, 2, True],
-        ...     [5.0, 5, False],
-        ... ]))
-        [7.0, 32.0]
-        >>> list(pds_session.workflows("<deployment_id>").compute_nn_layer(<generator of [3.0, 2, True] or {"value": 5.0, "scale": 5, "bias": False}>))
-        [7.0, 32.0]
-    """
-    total = 0.0
-    async for value, scale, bias in inputStream:  # generated runtime passes an async input iterator
-        current = float(value) * float(scale) + float(bias)
-        total += current
-        yield total
+async def running_mean(values: WorkflowStreamInput[float]) -> WorkflowStreamOutput[int, float]:
+    """Read a stream and answer as it goes: (values so far, their mean) after each one."""
+    seen = 0
+    total_so_far = 0.0
+    async for value in values:
+        seen += 1
+        total_so_far += float(value)
+        yield seen, total_so_far / seen
