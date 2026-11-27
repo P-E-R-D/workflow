@@ -3,7 +3,7 @@
 Buttons run the operations in workflow.py as jobs on PERD; metrics and charts
 show their results as they arrive.
 
-Guide: https://perd.app/docs/workflows/pages/
+Guide: https://perd.app/docs/getting-started/first-workflow/
 """
 
 import perdlit as pl
